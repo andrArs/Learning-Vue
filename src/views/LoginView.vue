@@ -38,6 +38,7 @@
 </script>
 
 <template>
+
  <v-card 
    class="mx-auto  glass_card"
     width="500px"
