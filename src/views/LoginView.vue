@@ -2,38 +2,52 @@
   import { ref } from 'vue'
   import '@mdi/font/css/materialdesignicons.css'
   import { useRouter } from 'vue-router'
+  import axios from 'axios'
+  
 
   const form = ref()
-
-
   const username = ref('')
-  const usernameRules = ref([
-    v => !!v || 'Username is required',
-    v => (v && v.length <= 15) || 'Username must be 15 characters or less',
-  ])
+  const password = ref('')
+  const showPassword = ref(false)
+  const rememberMe = ref(false)
 
-    const password = ref('')
-    const passwordRules = ref([p => !!p || 'Password is required'])
-    const showPassword = ref(false)
+  const usernameRules = ref([v => !!v || 'Username is required'])
+  const passwordRules = ref([p => !!p || 'Password is required'])
+
 
   const router = useRouter()
 
   async function validate () {
-    const { valid } = await form.value.validate()
-    if(valid){
-    if(username.value==='andreea'&& password.value==='123a'){
-        alert('Login successfully')
-        router.push('/about')
-    }else{
-      alert('Invalid credentials')
-      form.value.reset()
-      
-    }}
+    const  valid = await form.value.validate()
+    if(!valid)return
+   
+    try{
+    const response=await axios.get('http://localhost:3000/users', {
+      params:{
+      username: username.value,
+      password: password.value}
+    })
+    console.log('Login successfully', response.data[0])
+    const token=response.data[0].token
 
-    
-    
-
+if(rememberMe.value){
+    localStorage.setItem('token',response.data[0].token)
   }
+  else{
+    sessionStorage.setItem('token',response.data[0].token)
+  }
+
+
+    router.push('/about')
+
+  }catch(error){
+    console.log('Login failed', error);
+    alert('Invalid credentials')
+    form.value.reset()
+  }
+  }
+
+
   
 </script>
 
@@ -54,7 +68,6 @@
     <v-form ref="form">
       <v-text-field
         v-model="username"
-        :counter="10"
         :rules="usernameRules"
         label="Username"
         required
@@ -64,7 +77,6 @@
 
       <v-text-field
         v-model="password"
-        :counter="10"
         :rules="passwordRules"
         label="Password"
         :type="showPassword ? 'text' : 'password'"
@@ -74,6 +86,9 @@
         class="mb-2"
         required
       ></v-text-field>
+
+      <v-checkbox v-model="rememberMe" label="Remember Me"></v-checkbox>
+
 
       <div class="d-flex flex-column">
         <v-btn class="mt-4" color="#d1cd00" block @click="validate">

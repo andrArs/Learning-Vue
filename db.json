@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "andreea",
+      "password": "123a",
+      "token": "abcd1234"
+    },
+    {
+      "id": "2",
+      "username": "sissy",
+      "password": "123b",
+      "token": "efgh5678"
+    },
+    {
+      "id": "74ed",
+      "params": {
+        "username": "andreea",
+        "password": "123a"
+      }
+    }
+  ]
+}
