@@ -12,6 +12,7 @@ import router from './router'
 
 const app = createApp(App)
 
+
 // Pinia
 app.use(createPinia())
 
@@ -21,6 +22,8 @@ const vuetify = createVuetify({
   directives,
 })
 app.use(vuetify)
+
+
 
 // Router
 app.use(router)

@@ -3,7 +3,8 @@
   import '@mdi/font/css/materialdesignicons.css'
   import { useRouter } from 'vue-router'
   import axios from 'axios'
-  
+  import { useAuthStore } from '@/stores/authStore'
+
 
   const form = ref()
   const username = ref('')
@@ -16,7 +17,7 @@
 
 
   const router = useRouter()
-
+const authStore = useAuthStore()
   async function validate () {
     const  valid = await form.value.validate()
     if(!valid)return
@@ -30,14 +31,7 @@
     console.log('Login successfully', response.data[0])
     const token=response.data[0].token
 
-if(rememberMe.value){
-    localStorage.setItem('token',response.data[0].token)
-  }
-  else{
-    sessionStorage.setItem('token',response.data[0].token)
-  }
-
-
+    authStore.setToken(token)
     router.push('/about')
 
   }catch(error){
